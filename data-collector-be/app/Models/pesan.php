@@ -20,8 +20,6 @@ class pesan extends Model
         'id_pengirim',
         'nama_pengirim',
         'jenis_provider',
-        'jumlah',
-        'created_at',
-        'updated_at'
+        'jumlah'
     ];
 }

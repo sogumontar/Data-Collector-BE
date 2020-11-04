@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Db;
-namespace App\Http\Controllers;
+
+use App\Http\Controllers\TestController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,4 +19,6 @@ namespace App\Http\Controllers;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/api/findAll','PesanController@findAll');
+Route::get('/findAll','App\Http\Controllers\PesanController@find');
+
+Route::post('/store','App\Http\Controllers\PesanController@store');
