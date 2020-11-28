@@ -22,3 +22,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/findAll','App\Http\Controllers\PesanController@find');
 
 Route::post('/store','App\Http\Controllers\PesanController@store');
+Route::post('/search/{nomor}','App\Http\Controllers\PesanController@search');
