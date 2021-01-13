@@ -65,7 +65,6 @@ class PesanController extends Controller
         }
         return $nomor;
     }
-
     private function checkProvider($nomor)
     {
         $listXl = ['0859', '0877', '0878', '0818', '0819',];
