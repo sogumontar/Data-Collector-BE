@@ -26,7 +26,7 @@ class PesanController extends Controller
 
     public function search($nomor)
     {
-        $result = DB::table('pesans')->where('nomor', 'like', '%' . $nomor . '%' )->get();
+        $result = DB::table('pesans')->where('nomor', 'like', '%' . $nomor . '%')->get();
         $response = [
             'code' => '200',
             'status' => 'OK',
@@ -37,15 +37,16 @@ class PesanController extends Controller
 
     public function store(Request $request)
     {
+        $nom =$this->prePo($request['nomor']);
         $pesan = new pesan();
         $pesan->judul = $request['judul'];
         $pesan->tanggal = $request['tanggal'];
         $pesan->isi = $request['isi'];
-        $pesan->nomor = $request['nomor'];
+        $pesan->nomor = $this->genericNumber($nom);
         $pesan->kategori = $request['kategori'];
         $pesan->id_pengirim = $request['id_pengirim'];
         $pesan->nama_pengirim = $request['nama_pengirim'];
-        $pesan->jenis_provider = $this->checkProvider(substr($request['nomor'],0,4));
+        $pesan->jenis_provider = $this->checkProvider(substr($this->genericNumber($nom), 0, 4));
         $pesan->jumlah = $request['jumlah'];
         $pesan->save();
         $response = [
@@ -54,42 +55,51 @@ class PesanController extends Controller
             'Message' => 'Insert Data Success',
         ];
         return $response;
-
     }
 
+    private function genericNumber($nomor)
+    {
+        if ($nomor[0] == '+' && $nomor[1] == '6' && $nomor[2] == '2') {
+            $nomor = substr_replace($nomor, '0', 0, 3);
+        } else if ($nomor[0] == '6' && $nomor[1] == '2') {
+            $nomor = substr_replace($nomor, '0', 0, 2);
+        }
+        return $nomor;
+    }
     private function prePo($nomor){
-
+        return str_ireplace( array( '-', ' ', '_' ), '', $nomor);
     }
 
-    private function checkProvider($nomor){
-        $listXl=['0859','0877', '0878', '0818', '0819',];
-        $listTelkomsel=['0821', '188', '0822', '0823', '0851', '0852', '0853', '0813', '0811', '0812',];
-        $listTri=['0898', '0899', '0895', '0896', '0897',];
-        $listIndosat=['0814', '0815', '0816', '0855', '0856', '0857', '0858',];
-        $listSmartfren=['0889', '0881', '0882', '0883', '0886', '0887', '0888', '0884', '0885',];
-        $listCeria=['0828',];
-        $listByru=['0868',];
-        $listNTS=['0838',];
-        $listAxis=['0832', '0833', '0831', '0838',];
-        if(in_array($nomor,$listXl)){
+    private function checkProvider($nomor)
+    {
+        $listXl = ['0859', '0877', '0878', '0818', '0819',];
+        $listTelkomsel = ['0821', '188', '0822', '0823', '0851', '0852', '0853', '0813', '0811', '0812',];
+        $listTri = ['0898', '0899', '0895', '0896', '0897',];
+        $listIndosat = ['0814', '0815', '0816', '0855', '0856', '0857', '0858',];
+        $listSmartfren = ['0889', '0881', '0882', '0883', '0886', '0887', '0888', '0884', '0885',];
+        $listCeria = ['0828',];
+        $listByru = ['0868',];
+        $listNTS = ['0838',];
+        $listAxis = ['0832', '0833', '0831', '0838',];
+        if (in_array($nomor, $listXl)) {
             return "XL";
-        }else if(in_array($nomor,$listTelkomsel)){
+        } else if (in_array($nomor, $listTelkomsel)) {
             return "Telkomsel";
-        }else if(in_array($nomor,$listTri)){
+        } else if (in_array($nomor, $listTri)) {
             return "Three";
-        }else if(in_array($nomor,$listIndosat)){
+        } else if (in_array($nomor, $listIndosat)) {
             return "Indosat";
-        }else if(in_array($nomor,$listSmartfren)){
+        } else if (in_array($nomor, $listSmartfren)) {
             return "Smartfren";
-        }else if(in_array($nomor,$listCeria)){
+        } else if (in_array($nomor, $listCeria)) {
             return "Ceria";
-        }else if(in_array($nomor,$listByru)){
+        } else if (in_array($nomor, $listByru)) {
             return "Byru";
-        }else if(in_array($nomor,$listNTS)){
+        } else if (in_array($nomor, $listNTS)) {
             return "NTS";
-        }else if(in_array($nomor,$listAxis)){
+        } else if (in_array($nomor, $listAxis)) {
             return "Axis";
-        }else{
+        } else {
             return "Unknown";
         }
     }
