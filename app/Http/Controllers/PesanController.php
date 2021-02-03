@@ -15,7 +15,7 @@ class PesanController extends Controller
     //
     public function find()
     {
-        $data = DB::table('pesans')->get();
+        $data = DB::table('pesans')->orderBy('created_at','desc')->get();
         $response = [
             'code' => '200',
             'status' => 'OK',
@@ -54,6 +54,10 @@ class PesanController extends Controller
             'Message' => 'Insert Data Success',
         ];
         return $response;
+
+    }
+
+    private function prePo($nomor){
 
     }
 
