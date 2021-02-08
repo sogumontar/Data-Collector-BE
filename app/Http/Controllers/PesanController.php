@@ -52,7 +52,7 @@ class PesanController extends Controller
         foreach ($dat as $data) {
             $pattern = "/\d{4}\-\d{2}\-\d{2}/";
             if (preg_match($pattern, $data, $matches)) {
-                return $this->cleanSpace(var_export($data, true));
+                return str_replace("'", "", var_export($data, true));
             }
             $i++;
         }
@@ -60,7 +60,7 @@ class PesanController extends Controller
 
     private function cleanSpace($data)
     {
-        $res= str_replace("'", "", $data);
+        $res= str_replace(" ", "", $data);
         $ress= str_replace(" ", "", $res);
         return str_replace("-", "", $ress);
     }
