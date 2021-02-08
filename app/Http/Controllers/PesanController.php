@@ -15,7 +15,7 @@ class PesanController extends Controller
     //
     public function find()
     {
-        $data = DB::table('pesans')->orderBy('created_at','desc')->get();
+        $data = DB::table('pesans')->orderBy('created_at', 'desc')->get();
         $response = [
             'code' => '200',
             'status' => 'OK',
@@ -35,13 +35,50 @@ class PesanController extends Controller
         return $response;
     }
 
+    private function split($m)
+    {
+        $dat = explode(" ", $m);
+        $i = 0;
+        foreach ($dat as $data) {
+            if (is_numeric($data)) {
+                return str_replace("'", "", var_export($data, true));
+            }
+            $i++;
+        }
+    }
+    private function findDate($date){
+        $dat = explode(" ", $date);
+        $i=0;
+        foreach ($dat as $data) {
+            $pattern = "/\d{4}\-\d{2}\-\d{2}/";
+            if (preg_match($pattern, $data, $matches)) {
+                return $this->cleanSpace(var_export($data, true));
+            }
+            $i++;
+        }
+    }
+
+    private function cleanSpace($data)
+    {
+        $res= str_replace("'", "", $data);
+        $ress= str_replace(" ", "", $res);
+        return str_replace("-", "", $ress);
+    }
+
+    private function removeNumbs($num)
+    {
+        $res = preg_replace('/([0-9]+[\- ]?[0-9]+)/', '', $num);
+        $result = preg_replace('/(\d{4}[\.\/\-][01]\d[\.\/\-][0-3]\d)/', '', $res);
+        return $this->cleanSpace($result);
+    }
+
     public function store(Request $request)
     {
-        $nom =$this->prePo($request['nomor']);
+        $nom = $this->prePo($this->split($request['isi']));
         $pesan = new pesan();
         $pesan->judul = $request['judul'];
-        $pesan->tanggal = $request['tanggal'];
-        $pesan->isi = $request['isi'];
+        $pesan->tanggal = $this->findDate($request['isi']);
+        $pesan->isi = $this->removeNumbs($request['isi']);
         $pesan->nomor = $this->genericNumber($nom);
         $pesan->kategori = $request['kategori'];
         $pesan->id_pengirim = $request['id_pengirim'];
@@ -66,8 +103,10 @@ class PesanController extends Controller
         }
         return $nomor;
     }
-    private function prePo($nomor){
-        return str_ireplace( array( '-', ' ', '_' ), '', $nomor);
+
+    private function prePo($nomor)
+    {
+        return str_ireplace(array('-', ' ', '_'), '', $nomor);
     }
 
     private function checkProvider($nomor)
