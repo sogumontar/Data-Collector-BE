@@ -74,11 +74,19 @@ class PesanController extends Controller
 
     public function store(Request $request)
     {
-        $nom = $this->prePo($this->split($request['isi']));
+        $val = explode("||",$request['isi']);
+        foreach ($val as $item) {
+            $this->saveData($item,$request);
+        }
+
+    }
+
+    private function saveData($sms, $request){
+        $nom = $this->prePo($this->split($sms));
         $pesan = new pesan();
         $pesan->judul = $request['judul'];
-        $pesan->tanggal = $this->findDate($request['isi']);
-        $pesan->isi = $this->removeNumbs($request['isi']);
+        $pesan->tanggal = $this->findDate($sms);
+        $pesan->isi = $this->removeNumbs($sms);
         $pesan->nomor = $this->genericNumber($nom);
         $pesan->kategori = $request['kategori'];
         $pesan->id_pengirim = $request['id_pengirim'];
