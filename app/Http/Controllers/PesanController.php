@@ -74,19 +74,40 @@ class PesanController extends Controller
 
     public function store(Request $request)
     {
-        $val = explode("||",$request['isi']);
-        foreach ($val as $item) {
-            $this->saveData($item,$request);
-        }
+//        $val = explode("||",$request['isi']);
+//        foreach ($val as $item) {
+            $this->saveData($request);
+//        }
 
     }
 
-    private function saveData($sms, $request){
-        $nom = $this->prePo($this->split($sms));
+//    private function saveData($sms, $request){
+//        $nom = $this->prePo($this->split($sms));
+//        $pesan = new pesan();
+//        $pesan->judul = $request['judul'];
+//        $pesan->tanggal = $this->findDate($sms);
+//        $pesan->isi = $this->removeNumbs($sms);
+//        $pesan->nomor = $this->genericNumber($nom);
+//        $pesan->kategori = $request['kategori'];
+//        $pesan->id_pengirim = $request['id_pengirim'];
+//        $pesan->nama_pengirim = $request['nama_pengirim'];
+//        $pesan->jenis_provider = $this->checkProvider(substr($this->genericNumber($nom), 0, 4));
+//        $pesan->jumlah = $request['jumlah'];
+//        $pesan->save();
+//        $response = [
+//            'code' => '201',
+//            'status' => 'Created',
+//            'Message' => 'Insert Data Success',
+//        ];
+//        return $response;
+//    }
+
+    private function saveData($request){
+        $nom = $this->prePo($request['nomor']);
         $pesan = new pesan();
         $pesan->judul = $request['judul'];
-        $pesan->tanggal = $this->findDate($sms);
-        $pesan->isi = $this->removeNumbs($sms);
+        $pesan->tanggal = $request['tanggal'];
+        $pesan->isi = $request['isi'];
         $pesan->nomor = $this->genericNumber($nom);
         $pesan->kategori = $request['kategori'];
         $pesan->id_pengirim = $request['id_pengirim'];
