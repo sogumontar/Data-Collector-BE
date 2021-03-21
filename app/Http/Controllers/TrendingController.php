@@ -21,7 +21,7 @@ class TrendingController extends Controller
 
     public function findDetailTrending($nomor)
     {
-        $users = DB::select("SELECT * FROM pesans where nomor LIKE '" . $nomor . "'");
+        $users = DB::select("SELECT * FR OM pesans where nomor LIKE '" . $nomor . "'");
         $response = [
             'code' => '200',
             'status' => 'OK',
