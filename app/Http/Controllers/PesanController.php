@@ -26,7 +26,9 @@ class PesanController extends Controller
 
     public function search($nomor)
     {
-        $nomor = str_replace("+62","0",$nomor);
+        if ($nomor[0] == '6' && $nomor[1] == '2') {
+            $nomor = substr_replace($nomor, '0', 0, 2);
+        }
         $result = DB::table('pesans')->where('nomor', 'like', '%' . $nomor . '%')->get();
         $response = [
             'code' => '200',
