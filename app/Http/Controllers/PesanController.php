@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Models\pesan;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -13,9 +14,30 @@ use Illuminate\Support\Facades\DB;
 class PesanController extends Controller
 {
     //
+    public function approval(Request $request, $id)
+    {
+        $pesan = pesan::find($id);
+        if($pesan) {
+            $pesan->update([
+                'status' => $request->status
+            ]);
+            return response()->json(['message' => 'Pesan berhasil diterima',  'status' => 'OK', 'code' => 200], 200);
+        }
+        return response()->json(['message'=>'Pesan tidak ditemukan', 'status'=>'Not Found','code'=>404]);
+    }
+
+    public function findDataInAdmin(){
+        $data = DB::table('pesans')->where('status', '=', 1)->orderBy('created_at', 'desc')->get();
+        $response = [
+            'code' => '200',
+            'status' => 'OK',
+            'data' => $data,
+        ];
+        return $response;
+    }
     public function find()
     {
-        $data = DB::table('pesans')->orderBy('created_at', 'desc')->get();
+        $data = DB::table('pesans')->where('status', '=', 2)->orderBy('created_at', 'desc')->get();
         $response = [
             'code' => '200',
             'status' => 'OK',
@@ -29,7 +51,7 @@ class PesanController extends Controller
         if ($nomor[0] == '6' && $nomor[1] == '2') {
             $nomor = substr_replace($nomor, '0', 0, 2);
         }
-        $result = DB::table('pesans')->where('nomor', 'like', '%' . $nomor . '%')->get();
+        $result = DB::table('pesans')->where('nomor', 'like', '%' . $nomor . '%')->where('status', '=', 2)->get();
         $response = [
             'code' => '200',
             'status' => 'OK',
@@ -49,9 +71,11 @@ class PesanController extends Controller
             $i++;
         }
     }
-    private function findDate($date){
+
+    private function findDate($date)
+    {
         $dat = explode(" ", $date);
-        $i=0;
+        $i = 0;
         foreach ($dat as $data) {
             $pattern = "/\d{4}\-\d{2}\-\d{2}/";
             if (preg_match($pattern, $data, $matches)) {
@@ -63,8 +87,8 @@ class PesanController extends Controller
 
     private function cleanSpace($data)
     {
-        $res= str_replace(" ", "", $data);
-        $ress= str_replace(" ", "", $res);
+        $res = str_replace(" ", "", $data);
+        $ress = str_replace(" ", "", $res);
         return str_replace("-", "", $ress);
     }
 
@@ -79,7 +103,7 @@ class PesanController extends Controller
     {
 //        $val = explode("||",$request['isi']);
 //        foreach ($val as $item) {
-            $this->saveData($request);
+        $this->saveData($request);
 //        }
 
     }
@@ -105,7 +129,8 @@ class PesanController extends Controller
 //        return $response;
 //    }
 
-    private function saveData($request){
+    private function saveData($request)
+    {
         $nom = $this->prePo($request['nomor']);
         $pesan = new pesan();
         $pesan->judul = $request['judul'];

@@ -21,3 +21,6 @@ Route::get('/trending/{nomor}','App\Http\Controllers\TrendingController@findDeta
 
 Route::post('/store','App\Http\Controllers\PesanController@store');
 Route::post('/search/{nomor}','App\Http\Controllers\PesanController@search');
+
+Ruote::put('/admin/approval/{id}','App\Http\Controllers\PesanController@approval');
+Route::get('/admin/findAll','App\Http\Controllers\PesanController@findDataInAdmin');
