@@ -21,7 +21,11 @@ class PesanController extends Controller
             $pesan->update([
                 'status' => $request->status
             ]);
-            return response()->json(['message' => 'Pesan berhasil diterima',  'status' => 'OK', 'code' => 200], 200);
+            $pesan = 'Pesan berhasil diterima';
+            if($request->status == 0){
+                $pesan = 'Pesan berhasil ditolak';
+            }
+            return response()->json(['message' => $pesan,  'status' => 'OK', 'code' => 200], 200);
         }
         return response()->json(['message'=>'Pesan tidak ditemukan', 'status'=>'Not Found','code'=>404]);
     }
