@@ -18,7 +18,7 @@ class PesanController extends Controller
     {
         $pesan = pesan::find($id);
         if($pesan) {
-            $pesan->update([
+            DB::table('pesans')->where('id',$id)->update([
                 'status' => $request->status
             ]);
             $pesan = 'Pesan berhasil diterima';
