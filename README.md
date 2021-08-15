@@ -7,6 +7,17 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
+# Digital-Library
+Project to build a web based application for church digital library.
+
+#How to run app
+### composer install
+### copy .env.example .env
+### (optional) php artisan migrate 
+### (only for first time run) php artisan key:genarate
+### (only for first time run) php artisan migrate:fresh --seed
+### php artisan serve
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
